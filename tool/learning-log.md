@@ -33,6 +33,12 @@ BASICS: What is goes over (Refer back to notes to know the code) **NOTE: THIS VI
 Extra notes:
 * Usually just make a folder for every testing game since sprites take up a lot and will be easier to manage with a folder
 
+Summary of everything covered in the video so far
+* Due to video's version of Kaboom being out of date, it seems like functions don't work the same
+    * This could be resolved by learning straight from the [kaboom page](https://kaboomjs.com/) instead of the video
+* I think for now I will just start learning from the kaboom page so I know the code for the latest version of kaboom
+    * When I think I have a good enough understanding of all the code on kaboom page I can refer back to the video to see if I can do it then but with the most recent version of kaboom
+
 <!--
 * Links you used today (websites, videos, etc)
 * Things you tried, progress you made, etc
