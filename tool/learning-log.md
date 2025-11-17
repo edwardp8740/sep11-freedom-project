@@ -1,8 +1,8 @@
 # Tool Learning Log
 
-## Tool: **Kaboom (tentative)**
+## Tool: **Kaboom**
 
-## Project: **To create a game like level devil**
+## Project: **To create a game to help study with AP Chem**
 
 ---
 
@@ -23,6 +23,15 @@
         * I plan on fixing this by learning how to make smooth movement with kaboom
     * I also learned how I could incorporate functions with kaboom already a little
 * I plan on using a [video](https://www.youtube.com/watch?v=4OaHB0JbJDI) to help me learn more about the basics as well as help me recreate already made games to possibly us some of their code to put into my freedom project
+### 11/10/25
+* Today I will start watching the video and split it up into 4 parts: The Basics, Space Invaders game Mario game, and Zelda game.
+    * I will start off from the basics and move in the listed order
+BASICS: What is goes over (Refer back to notes to know the code) **NOTE: THIS VIDEO WAS RECORDED IN AN EARLIER VERSION OF KABOOM**
+* Goes over how to add a sprite
+* Goes over go to add a level
+
+Extra notes:
+* Usually just make a folder for every testing game since sprites take up a lot and will be easier to manage with a folder
 
 <!--
 * Links you used today (websites, videos, etc)
