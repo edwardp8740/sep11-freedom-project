@@ -27,37 +27,66 @@
             // initialize context
             kaboom();
 
+            const JUMP_FORCE = 800;
+            const SPEED = 480;
+            const MOVE_SPEED = 800;
+
             scene("game", () => {
 
                 loadSprite("player", "sprites/stickman.png");
+                loadSprite("ground", "sprites/grass-block.png");
+
+                setGravity(1600);
 
                 add([
                     sprite('player'),
-                    scale(.05),
-                    pos(20,20)
                 ])
 
                 addLevel([
-                    '     ',
-                    '  @  ',
-                    '     ',
-                    'xxxxx',
+                    "                           ",
+                    "                           ",
+                    "           $               ",
+                    "         =====             ",
+                    "                           ",
+                    "                           ",
+                    "===========================",
                 ], {
                     //define the size of tile block
-                    tileWidth: 40,
-                    tileHeight: 40,
-                    //
+                    tileWidth: 100,
+                    tileHeight: 160,
+                    // define what each symbol means, by a function returning a component list (what will be passed to add())
                     tiles: {
-                        "x": () => [
-                            sprite("sprites/grass-block.png"),
+                        "$": () => [
+                            sprite("player"),
+                            area(),
+                            scale(.1),
+                            body(),
                         ],
-                        "@": () => [
-                            sprite("sprites/stickman.png"),
-                            body({ isStatic: true })
+                        "=": () => [
+                            sprite("ground"),
+                            area(),
+                            scale(.20),
+                            body({ isStatic: true }),
                         ],
                     }
                 })
+                function jump() {
+                    if (player.isGrounded()) {
+                        player.jump(JUMP_FORCE);
+                    }
+                }
+                function moveLeft() {
+                    player.move(-MOVE_SPEED, 0); // Move left along the x-axis
+                    };
+                function moveRight() {
+                    player.move(MOVE_SPEED, 0); // Move left along the x-axis
+                    };
 
+                onKeyPress("space", jump); // jump when user presses space
+                onKeyPress("w", jump); // jump when user presses w
+                onKeyPress("a", moveLeft); // move left when user presses a
+                onKeyPress("d", moveRight); // move right when user presses d
+                onClick(jump);
             });
 
             go("game");

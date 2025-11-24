@@ -39,6 +39,12 @@ Summary of everything covered in the video so far
 * I think for now I will just start learning from the kaboom page so I know the code for the latest version of kaboom
     * When I think I have a good enough understanding of all the code on kaboom page I can refer back to the video to see if I can do it then but with the most recent version of kaboom
 
+### 11/17/25
+
+* Today I will be going back into the same [file](kaboom-basics-2/kaboom-basics-2.html) I was using to learn from the video since I still want to learn how to use `addLevel`
+    * I figured out why my code wasn't working for `addLevel`, it turns out one of my sprites was named wrong so therefore wouldn't load in correctly and caused my whole code to not work.
+    * I added the same features from my other code so the player can move around, in the same choppy way
+
 <!--
 * Links you used today (websites, videos, etc)
 * Things you tried, progress you made, etc
