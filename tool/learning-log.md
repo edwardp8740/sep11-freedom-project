@@ -45,6 +45,17 @@ Summary of everything covered in the video so far
     * I figured out why my code wasn't working for `addLevel`, it turns out one of my sprites was named wrong so therefore wouldn't load in correctly and caused my whole code to not work.
     * I added the same features from my other code so the player can move around, in the same choppy way
 
+### 12/8/25
+
+* I tried learning about `get()` but I couldn't really figure out what it was for
+    * I plan on looking further into `get()` soon
+* I also learned about `destory()`, from what I understand it's used as a way to destory/take away from the game when something touches it or anything like that
+    * I plan on testing this along with `get()` so I get a good understanding of both of these things
+* `readd()` seems to be a way to replace something almost like when you swap characters mid game but I'm not fully sure if I am correct
+Future ideas:
+* I plan on looking for some videos about `get()`, `destory()`, and `readd()`
+    * After this I will test them out by creating something to understand how it works and what I can do with it for future ideas
+
 <!--
 * Links you used today (websites, videos, etc)
 * Things you tried, progress you made, etc
