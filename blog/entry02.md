@@ -1,7 +1,17 @@
 # Entry 2
-##### X/X/XX
+##### 12//15/25
 
-Text
+### How have I been learning my tool? What is my FP goal over winter break?
+
+Lately 
+
+### Skills
+
+
+
+### Engineering Design Process (EDP)
+
+
 
 [Previous](entry01.md) | [Next](entry03.md)
 
