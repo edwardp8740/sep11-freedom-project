@@ -29,7 +29,7 @@ Another skill I've improved was **Creativity**. When talking to my friend about 
 
 ### Engineering Design Process
 
-I feel as though I am on step 2 moving to step 3 because I have already defined my problem and am researching with my tool to find ways to help resolve it. My next step is to brainstorm and continue to learn more about my tool because I still don't know all about my tool just yet. I will be on this step for awhile becausse I want to really get to know how to use my tool and make something great with it, so that future highschool kids can use it to study and do well on their exam.
+I feel as though I am on step 2 moving to step 3 because I have already defined my problem and am researching with my tool to find ways to help resolve it. My next step is to brainstorm and continue to learn more about my tool because I still don't know all about my tool just yet. I will be on this step for awhile because I want to really get to know how to use my tool and make something great with it, so that future highschool kids can use it to study and do well on their exam.
 
 
 [Next](entry02.md)
