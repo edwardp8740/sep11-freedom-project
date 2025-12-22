@@ -43,11 +43,11 @@ This leads me to my goal over the winter break, I plan on trying to make a mini 
 
 ### Skills
 
-
+Two skills I improved on since the last blog is **Problem decomposition** and **Debugging**. while I was learning `addLevel()`, I came through a lot of problems since I didn't really understand how it worked. Though, instead of worrying about it I broke down each part to small sections just so that it would be easier to process then one big thing. As I referred back to a method my teacher taught me, by saying what's happening in the code out loud, because of this I was able to figure out what part of my code was messed up and fixed it. This should help me in the future since I'll be able to break stuff down into easier pieces and find bugs quicker.
 
 ### Engineering Design Process (EDP)
 
-
+As of now I am still on step 2 and 3 because I'm still trying to figure out more about kaboom and with that then brainstorming more stuff I could do. I'm going to be in this small little cycle so that I can learn and improve with using kaboom. After this I plan on starying to make prototypes of the final product so that I have something to work off of and use.
 
 [Previous](entry01.md) | [Next](entry03.md)
 
