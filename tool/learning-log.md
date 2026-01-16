@@ -47,7 +47,7 @@ Summary of everything covered in the video so far
 
 ### 12/8/25
 
-* I tried learning about `get()` but I couldn't really figure out what it was for
+* I tried learning about `c` but I couldn't really figure out what it was for
     * I plan on looking further into `get()` soon
 * I also learned about `destory()`, from what I understand it's used as a way to destory/take away from the game when something touches it or anything like that
     * I plan on testing this along with `get()` so I get a good understanding of both of these things
@@ -56,6 +56,17 @@ Future ideas:
 * I plan on looking for some videos about `get()`, `destory()`, and `readd()`
     * After this I will test them out by creating something to understand how it works and what I can do with it for future ideas
 
+### 1/9/26
+
+* I found out what `get()`, `destory()` and `readd()` do
+    * `get()`
+        * It retrieves a list of all game objects currently in the scene that match a specified tag or tags
+        * Example: it can be used in a way to tell the player how many things with that specfic tags there are
+    * `destory()`
+        * it basically just destorys the object and makes it disappear from the screen.
+        * Example: it can be used in a way to collect coins
+* Using my previous rough draft for a starting game, I tried adding these new things, I used `get()` to count the number of coins and telll the user how many coins there were in the game
+* I used `destory()` as a form to show the user they have collected a coin, so that when they touch the coin it will add to the counter and then get rid of the coin.
 <!--
 * Links you used today (websites, videos, etc)
 * Things you tried, progress you made, etc

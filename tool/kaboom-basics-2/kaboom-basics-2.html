@@ -35,18 +35,23 @@
 
                 loadSprite("player", "sprites/stickman.png");
                 loadSprite("ground", "sprites/grass-block.png");
+                loadSprite("coin", "sprites/goldcoin.jpg");
 
                 setGravity(1600);
 
-                add([
-                    sprite('player'),
+                const player = add([
+                    sprite("player"),
+                    area(),
+                    body(),
+                    scale(0.1),
+                    pos(200, 100),
                 ])
 
                 addLevel([
                     "                           ",
                     "                           ",
-                    "           $               ",
-                    "         =====             ",
+                    "                           ",
+                    "            ===            ",
                     "                           ",
                     "                           ",
                     "===========================",
@@ -56,17 +61,12 @@
                     tileHeight: 160,
                     // define what each symbol means, by a function returning a component list (what will be passed to add())
                     tiles: {
-                        "$": () => [
-                            sprite("player"),
-                            area(),
-                            scale(.1),
-                            body(),
-                        ],
                         "=": () => [
                             sprite("ground"),
                             area(),
                             scale(.20),
                             body({ isStatic: true }),
+                            pos(-600,-0)
                         ],
                     }
                 })
@@ -87,6 +87,40 @@
                 onKeyPress("a", moveLeft); // move left when user presses a
                 onKeyPress("d", moveRight); // move right when user presses d
                 onClick(jump);
+
+                // Add some coins to the scene
+                for (let i = 0; i < 5; i++) {
+                    add([
+                        sprite("coin"),
+                        pos(rand(0, width()), rand(0, height() / 2)),
+                        area(),
+                        scale(.1),
+                        "coin",
+                    ]);
+                }
+
+
+                // Example 1: Get all coins
+                const allCoins = get("coin");
+                const allCoinsText = add([
+                    text(`There are ` + allCoins.length + ` coins in the scene.`),
+                    pos(20,100),
+                    fixed(),
+                ])
+
+                var totalCoins = 0;
+                const coinText = add([
+                    text("Coins: " + totalCoins),
+                    pos(20, 20),
+                    fixed(),
+                ])
+                // Example 2: Use an onUpdate to take the coin off of the screen if player touches it
+                player.onCollide("coin", (coin) => {
+                    destroy(coin);
+                    totalCoins++;
+                    coinText.text = "Coins: " + totalCoins;
+                });
+
             });
 
             go("game");
