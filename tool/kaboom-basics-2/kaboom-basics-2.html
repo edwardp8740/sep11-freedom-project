@@ -100,7 +100,7 @@
                 }
 
 
-                // Example 1: Get all coins
+                // Get all coins
                 const allCoins = get("coin");
                 const allCoinsText = add([
                     text(`There are ` + allCoins.length + ` coins in the scene.`),
@@ -114,7 +114,7 @@
                     pos(20, 20),
                     fixed(),
                 ])
-                // Example 2: Use an onUpdate to take the coin off of the screen if player touches it
+                // Use an onUpdate to take the coin off of the screen if player touches it
                 player.onCollide("coin", (coin) => {
                     destroy(coin);
                     totalCoins++;

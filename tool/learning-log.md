@@ -67,6 +67,7 @@ Future ideas:
         * Example: it can be used in a way to collect coins
 * Using my previous rough draft for a starting game, I tried adding these new things, I used `get()` to count the number of coins and telll the user how many coins there were in the game
 * I used `destory()` as a form to show the user they have collected a coin, so that when they touch the coin it will add to the counter and then get rid of the coin.
+
 <!--
 * Links you used today (websites, videos, etc)
 * Things you tried, progress you made, etc
