@@ -114,7 +114,7 @@
                     pos(20, 20),
                     fixed(),
                 ])
-                // Use an onUpdate to take the coin off of the screen if player touches it
+                // Take the coin off of the screen if player touches it
                 player.onCollide("coin", (coin) => {
                     destroy(coin);
                     totalCoins++;
