@@ -68,6 +68,18 @@ Future ideas:
 * Using my previous rough draft for a starting game, I tried adding these new things, I used `get()` to count the number of coins and telll the user how many coins there were in the game
 * I used `destory()` as a form to show the user they have collected a coin, so that when they touch the coin it will add to the counter and then get rid of the coin.
 
+### 3/2/26
+
+* I learned about how the `health()` component 
+    * `health()` works just was you expect it to, you set the number of health/lives the player starts with and you can also set the max health it has, like in minecraft where the max health is 10.
+        * `.hurt()` takes away health from the player
+        * `.heal()` heals the player/ adds more health to the player
+*  I also learned about how the `lifespan()` component works
+    * `lifespan()` first you set the timer/how long the thing lasts for and then you can also add an additional animation to the object
+* I've made a new testing folder that will hold whatever I need to test certain things 
+    * I'm testing how check points work since I want to make a system where it will give the player a new question after every check point, though It's still not decided if it will be like this or not.
+
+
 <!--
 * Links you used today (websites, videos, etc)
 * Things you tried, progress you made, etc
