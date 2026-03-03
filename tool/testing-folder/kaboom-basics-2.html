@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <style>
+            /* CSS */
+
+        </style>
+
+        <title>Title</title>
+    </head>
+    <body>
+        <!-- HTML -->
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script type="module">
+            // JS
+
+            // import kaboom.js
+            import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.mjs";
+
+            // initialize context
+            kaboom();
+
+            const JUMP_FORCE = 800;
+            const SPEED = 480;
+            const MOVE_SPEED = 800;
+
+            scene("game", () => {
+
+                loadSprite("player", "sprites/stickman.png");
+                loadSprite("ground", "sprites/grass-block.png");
+                loadSprite("coin", "sprites/goldcoin.jpg");
+                loadSprite("flag", "sprites/flag.png");
+
+                setGravity(1600);
+
+                let checkpointPos = vec2(200, 100); // moved up
+
+                const player = add([
+                    sprite("player"),
+                    area(),
+                    body(),
+                    scale(0.1),
+                    pos(checkpointPos),
+                ]);
+
+                addLevel([
+                    "                           ",
+                    "                           ",
+                    "                           ",
+                    "            ===            ",
+                    "                           ",
+                    "                           ",
+                    "===========================",
+                ], {
+                    tileWidth: 100,
+                    tileHeight: 160,
+                    tiles: {
+                        "=": () => [
+                            sprite("ground"),
+                            area(),
+                            scale(.20),
+                            body({ isStatic: true }),
+                        ],
+                    }
+                });
+
+                function jump() {
+                    if (player.isGrounded()) {
+                        player.jump(800);
+                    }
+                }
+
+                onKeyPress("space", jump);
+                onKeyPress("w", jump);
+
+                onKeyDown("a", () => player.move(-800, 0));
+                onKeyDown("d", () => player.move(800, 0));
+
+            });
+
+
+            // scene("game", () => {
+
+            //     loadSprite("player", "sprites/stickman.png");
+            //     loadSprite("ground", "sprites/grass-block.png");
+            //     loadSprite("coin", "sprites/goldcoin.jpg");
+
+            //     setGravity(1600);
+            //     let checkpointPos = vec2(200, 100) // default spawn
+
+            //     const player = add([
+            //         sprite("player"),
+            //         area(),
+            //         body(),
+            //         scale(0.1),
+            //         pos(checkpointPos),
+            //     ])
+
+            //     addLevel([
+            //         "                           ",
+            //         "                           ",
+            //         "                           ",
+            //         "            ===            ",
+            //         "                           ",
+            //         "                           ",
+            //         "===========================",
+            //     ], {
+            //         //define the size of tile block
+            //         tileWidth: 100,
+            //         tileHeight: 160,
+            //         // define what each symbol means, by a function returning a component list (what will be passed to add())
+            //         tiles: {
+            //             "=": () => [
+            //                 sprite("ground"),
+            //                 area(),
+            //                 scale(.20),
+            //                 body({ isStatic: true }),
+            //                 pos(-600,-0)
+            //             ],
+            //         }
+            //     })
+            //     function jump() {
+            //         if (player.isGrounded()) {
+            //             player.jump(JUMP_FORCE);
+            //         }
+            //     }
+            //     function moveLeft() {
+            //         player.move(-MOVE_SPEED, 0); // Move left along the x-axis
+            //         };
+            //     function moveRight() {
+            //         player.move(MOVE_SPEED, 0); // Move left along the x-axis
+            //         };
+
+            //     onKeyPress("space", jump); // jump when user presses space
+            //     onKeyPress("w", jump); // jump when user presses w
+            //     onKeyPress("a", moveLeft); // move left when user presses a
+            //     onKeyPress("d", moveRight); // move right when user presses d
+            //     onClick(jump);
+
+                
+            //     // Checkpoint object
+            //     const checkpoint = add([
+            //         sprite("flag"),
+            //         pos(400, 200),
+            //         area(),
+            //         "checkpoint",
+            //     ])
+
+            //     player.onCollide("checkpoint", (cp) => {
+            //         checkpointPos = cp.pos.clone()
+            //         debug.log("Checkpoint saved!")
+            //     })
+
+            //     // Death condition
+            //     player.onCollide("danger", () => {
+            //         go("game") // reload scene
+            //     })
+            //     })
+
+            // });
+
+            go("game");
+        </script>
+    </body>
+</html>
