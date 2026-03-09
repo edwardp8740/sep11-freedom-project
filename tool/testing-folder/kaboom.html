@@ -36,8 +36,11 @@
                 loadSprite("player", "sprites/stickman.png");
                 loadSprite("ground", "sprites/grass-block.png");
                 loadSprite("coin", "sprites/goldcoin.jpg");
+                loadSprite("flag", "sprites/flag.png");
 
                 setGravity(1600);
+
+                let checkpointPos = vec2(200, 100); // moved up
 
                 const player = add([
                     sprite("player"),
@@ -45,7 +48,7 @@
                     body(),
                     scale(0.1),
                     pos(checkpointPos),
-                ])
+                ]);
 
                 addLevel([
                     "                           ",
@@ -56,61 +59,112 @@
                     "                           ",
                     "===========================",
                 ], {
-                    //define the size of tile block
                     tileWidth: 100,
                     tileHeight: 160,
-                    // define what each symbol means, by a function returning a component list (what will be passed to add())
                     tiles: {
                         "=": () => [
                             sprite("ground"),
                             area(),
                             scale(.20),
                             body({ isStatic: true }),
-                            pos(-600,-0)
                         ],
                     }
-                })
+                });
+
                 function jump() {
                     if (player.isGrounded()) {
-                        player.jump(JUMP_FORCE);
+                        player.jump(800);
                     }
                 }
-                function moveLeft() {
-                    player.move(-MOVE_SPEED, 0); // Move left along the x-axis
-                    };
-                function moveRight() {
-                    player.move(MOVE_SPEED, 0); // Move left along the x-axis
-                    };
 
-                onKeyPress("space", jump); // jump when user presses space
-                onKeyPress("w", jump); // jump when user presses w
-                onKeyPress("a", moveLeft); // move left when user presses a
-                onKeyPress("d", moveRight); // move right when user presses d
-                onClick(jump);
+                onKeyPress("space", jump);
+                onKeyPress("w", jump);
 
-                let checkpointPos = vec2(200, 100) // default spawn
-
-                
-                // Checkpoint object
-                const checkpoint = add([
-                    sprite("flag"),
-                    pos(400, 200),
-                    area(),
-                    "checkpoint",
-                ])
-
-                player.onCollide("checkpoint", (cp) => {
-                    checkpointPos = cp.pos.clone()
-                    debug.log("Checkpoint saved!")
-                })
-
-                // Death condition
-                player.onCollide("danger", () => {
-                    go("game") // reload scene
-                })
-                })
+                onKeyDown("a", () => player.move(-800, 0));
+                onKeyDown("d", () => player.move(800, 0));
 
             });
+
+
+            // scene("game", () => {
+
+            //     loadSprite("player", "sprites/stickman.png");
+            //     loadSprite("ground", "sprites/grass-block.png");
+            //     loadSprite("coin", "sprites/goldcoin.jpg");
+
+            //     setGravity(1600);
+            //     let checkpointPos = vec2(200, 100) // default spawn
+
+            //     const player = add([
+            //         sprite("player"),
+            //         area(),
+            //         body(),
+            //         scale(0.1),
+            //         pos(checkpointPos),
+            //     ])
+
+            //     addLevel([
+            //         "                           ",
+            //         "                           ",
+            //         "                           ",
+            //         "            ===            ",
+            //         "                           ",
+            //         "                           ",
+            //         "===========================",
+            //     ], {
+            //         //define the size of tile block
+            //         tileWidth: 100,
+            //         tileHeight: 160,
+            //         // define what each symbol means, by a function returning a component list (what will be passed to add())
+            //         tiles: {
+            //             "=": () => [
+            //                 sprite("ground"),
+            //                 area(),
+            //                 scale(.20),
+            //                 body({ isStatic: true }),
+            //                 pos(-600,-0)
+            //             ],
+            //         }
+            //     })
+            //     function jump() {
+            //         if (player.isGrounded()) {
+            //             player.jump(JUMP_FORCE);
+            //         }
+            //     }
+            //     function moveLeft() {
+            //         player.move(-MOVE_SPEED, 0); // Move left along the x-axis
+            //         };
+            //     function moveRight() {
+            //         player.move(MOVE_SPEED, 0); // Move left along the x-axis
+            //         };
+
+            //     onKeyPress("space", jump); // jump when user presses space
+            //     onKeyPress("w", jump); // jump when user presses w
+            //     onKeyPress("a", moveLeft); // move left when user presses a
+            //     onKeyPress("d", moveRight); // move right when user presses d
+            //     onClick(jump);
+
+                
+            //     // Checkpoint object
+            //     const checkpoint = add([
+            //         sprite("flag"),
+            //         pos(400, 200),
+            //         area(),
+            //         "checkpoint",
+            //     ])
+
+            //     player.onCollide("checkpoint", (cp) => {
+            //         checkpointPos = cp.pos.clone()
+            //         debug.log("Checkpoint saved!")
+            //     })
+
+            //     // Death condition
+            //     player.onCollide("danger", () => {
+            //         go("game") // reload scene
+            //     })
+            //     })
+
+            // });
 
             go("game");
         </script>
