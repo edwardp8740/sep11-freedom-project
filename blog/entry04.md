@@ -41,13 +41,15 @@ player.on("death", () => {
     go("lose")
 })
 ```
-This is the health system I learned
+This is the [health system](https://kaboomjs.com/#health) I learned. I will purposely make the game difficult so that I can use this health system to its fullest.
 
 ### Skills
 
-
+Two skills I've improved on is **Problem decomposition** and **How to learn**. I'm still trying to break down everything I need for my mvp into even smaller pieces, because I've been realizing that I need to know a lot just to make a good decent game/level. I've broken down the main parts of the level into small pieces like the health system and checkpoints I mentioned earlier. It's easier to see it this way because I can see what parts are truly important and needed vs what would be nice to have but not needed. I've also been trying to see what is the most efficient way I learn. For example, I've been using the kaboom website instead of videos and I seem to learn it pretty easily beecause the code is really simplified and explained in [kaboom](https://kaboomjs.com/). I'm doing this so that I don't waste much of the time I could spend learning other stuff about kaboom.
 
 ### Engineering Design Process (EDP)
+
+So far I'm going back and forth from steps 2-5. I'm still learning but learning for my MVP version of my game. Though I am trying to work on it with what I already know. As I learn new things, I try to see how I can use them in my MVP and what I could do with them along with everything I already know. I might be here for a bit but I will eventually move onto fully focusing on creating the MVP of my game.
 
 [Previous](entry03.md) | [Next](entry05.md)
 
