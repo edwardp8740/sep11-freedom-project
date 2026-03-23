@@ -21,29 +21,25 @@
         <script type="module">
             // JS
 
-            // import kaboom.js
             import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.mjs";
 
-            // initialize context
             kaboom();
 
-            const JUMP_FORCE = 800;
+            const JUMP_FORCE = 1300; // higher jump
             const SPEED = 480;
-            const MOVE_SPEED = 800;
-            const player = add([
-                health(3),
-            ])
+
+            let savedCheckpoint = vec2(200, 100); // persists across scenes
 
             scene("game", () => {
 
                 loadSprite("player", "sprites/stickman.png");
                 loadSprite("ground", "sprites/grass-block.png");
-                loadSprite("coin", "sprites/goldcoin.jpg");
                 loadSprite("flag", "sprites/checkpoint-flag.png");
+                loadSprite("enemy", "sprites/ghosty.jpg");
 
                 setGravity(1600);
 
-                let checkpointPos = vec2(200, 100); // moved up
+                let checkpointPos = savedCheckpoint.clone();
 
                 const player = add([
                     sprite("player"),
@@ -51,29 +47,47 @@
                     body(),
                     scale(0.1),
                     pos(checkpointPos),
+                    health(3),
                 ]);
 
                 player.onUpdate(() => {
                     camPos(camPos().lerp(player.pos, 0.1));
                 });
 
+                // LEVEL
                 addLevel([
-                    // "                           ",
-                    // "                           ",
-                    "                           ",
-                    "            ===            ",
-                    "                           ",
-                    "                           ",
-                    "===============================================================",
+                    "                                                                           ",
+                    "                                                                           ",
+                    "        ===             ===               ===             ===              ",
+                    "                                                                           ",
+                    "   ===        ===              ===             ===              ===        ",
+                    "                                                                           ",
+                    "                 F               F               F                    E    ",
+                    "===========================================================================",
                 ], {
                     tileWidth: 100,
-                    tileHeight: 160,
+                    tileHeight: 120,
                     tiles: {
                         "=": () => [
                             sprite("ground"),
                             area(),
-                            scale(.20),
+                            scale(.3),
                             body({ isStatic: true }),
+                        ],
+
+                        "F": () => [
+                            sprite("flag"),
+                            area(),
+                            scale(.25),
+                            "checkpoint",
+                        ],
+
+                        // END FLAG
+                        "E": () => [
+                            sprite("flag"),
+                            area(),
+                            scale(.3),
+                            "end",
                         ],
                     }
                 });
@@ -87,37 +101,102 @@
                 onKeyPress("space", jump);
                 onKeyPress("w", jump);
 
-                onKeyDown("a", () => player.move(-400, 0));
-                onKeyDown("d", () => player.move(400, 0));
+                onKeyDown("a", () => player.move(-SPEED, 0));
+                onKeyDown("d", () => player.move(SPEED, 0));
 
-                // Checkpoint object
-                const checkpoint = add([
-                    sprite("flag"),
-                    pos(600, 600), // adjusted so it's visible
-                    area(),
-                    scale(.2),
-                    "checkpoint",
-                ])
-
+                // SAVE CHECKPOINT
                 player.onCollide("checkpoint", (cp) => {
-                    checkpointPos = cp.pos.clone()
-                    debug.log("Checkpoint saved!")
-                })
+                    checkpointPos = cp.pos.clone();
+                    savedCheckpoint = checkpointPos.clone(); // save globally
+                    debug.log("Checkpoint saved!");
+                });
 
-                player.onCollide("bad", (bad) => {
-                    player.hurt(1)
-                    bad.hurt(1)
-                })
+                // ENEMIES
+                var enemyPositions = [
+                    vec2(700, 500),
+                    vec2(1400, 500),
+                    vec2(2100, 500),
+                    vec2(2800, 500),
+                ];
+
+                for (let i = 0; i < enemyPositions.length; i++) {
+
+                    let startX = enemyPositions[i].x;
+
+                    var enemy = add([
+                        sprite("enemy"),
+                        pos(enemyPositions[i]),
+                        area(),
+                        body(),
+                        scale(0.1),
+                        "bad"
+                    ]);
+
+                    enemy.dir = 1;
+
+                    enemy.onUpdate(() => {
+                        enemy.move(enemy.dir * 120, 0);
+
+                        if (enemy.pos.x > startX + 200) enemy.dir = -1;
+                        if (enemy.pos.x < startX - 200) enemy.dir = 1;
+                    });
+                }
+
+                // DAMAGE
+                player.onCollide("bad", () => {
+                    player.hurt(1);
+                });
 
                 player.on("hurt", () => {
-                    play("ouch")
-                })
+                    debug.log("Health: " + player.hp());
+                });
 
-                // Death condition
-                player.onCollide("death", () => {
-                    go("game") // reload scene
-                })
+                // DEATH --> go to lose screen 
+                player.on("death", () => {
+                    go("lose", { checkpoint: checkpointPos });
+                });
 
+                // WIN CONDITION
+                player.onCollide("end", () => {
+                    go("win");
+                });
+
+            });
+
+            // LOSE SCENE
+            scene("lose", ({ checkpoint }) => {
+
+                add([
+                    text("You Died!\nPress R = Restart\nPress C = Continue", { size: 40 }),
+                    pos(center()),
+                    anchor("center"),
+                ]);
+
+                // Restart entire level
+                onKeyPress("r", () => {
+                    savedCheckpoint = vec2(200, 100);
+                    go("game");
+                });
+
+                // Continue from checkpoint
+                onKeyPress("c", () => {
+                    savedCheckpoint = checkpoint.clone();
+                    go("game");
+                });
+            });
+
+            // WIN SCENE
+            scene("win", () => {
+                add([
+                    text("🎉 You Win!\nYou beat the level!", { size: 50 }),
+                    pos(center()),
+                    anchor("center"),
+                ]);
+
+                onKeyPress("r", () => {
+                    savedCheckpoint = vec2(200, 100);
+                    go("game");
+                });
             });
 
             go("game");

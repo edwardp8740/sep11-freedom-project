@@ -79,6 +79,17 @@ Future ideas:
 * I've made a new testing folder that will hold whatever I need to test certain things 
     * I'm testing how check points work since I want to make a system where it will give the player a new question after every check point, though It's still not decided if it will be like this or not.
 
+### 3/16/26
+
+* I'm going to make to be testing how player damages work and how I can also make ceratin things happen after some condition is met
+    * I started with the normal setup and installing the health system
+    * I made small ghost enemies to damage the player and added a death screen when the player dies
+        * if the play dies then the player has an option to either restart the level completely or continue from last check point
+    * I made a win screen too
+        * after the player reaches the last checkpoint/flag the player will be shown a win screen congratulating them and they can restart the level again
+* I want to be able to make traps/other obstacles to see how they work,
+    * Using level devil as a reference for traps and what the goal is to make using this same test game.
+* I also want to add other small things into the game so that it feels more like a game, for example like if the player falls off the screen, they die.
 
 <!--
 * Links you used today (websites, videos, etc)
