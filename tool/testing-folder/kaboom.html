@@ -1,205 +1,384 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-        <style>
-            /* CSS */
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #111; /* darker background so colors pop */
+        }
+    </style>
 
-        </style>
+    <title>AP Chem Rush Extreme</title>
+</head>
 
-        <title>Title</title>
-    </head>
-    <body>
-        <!-- HTML -->
+<body>
 
+    <script type="module">
+        import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.mjs";
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script type="module">
-            // JS
+        // ==== BASIC SETUP ====
+        kaboom({
+            global: true,
+            width: 1280,
+            height: 720,
+            scale: 1,
+            clearColor: [0.1, 0.1, 0.1, 1], // darker background
+        });
 
-            import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.mjs";
+        const SPEED = 480;
+        const JUMP_FORCE = 800;
+        const TILE = 64;
 
-            kaboom();
+        let savedCheckpoint = vec2(100, 100);
+        let hurtTimer = 0;
 
-            const JUMP_FORCE = 1300; // higher jump
-            const SPEED = 480;
+        // ==== LOAD SPRITES ====
+        const spriteSources = [
+            ["labBeaker", "https://upload.wikimedia.org/wikipedia/commons/8/89/Beaker_-_The_Noun_Project.svg"],
+            ["labFlask", "https://upload.wikimedia.org/wikipedia/commons/f/fb/Chemical_Flask_icon.svg"],
+            ["volFlask", "https://upload.wikimedia.org/wikipedia/commons/a/a9/Volumetric_flask_icon.svg"],
+        ];
 
-            let savedCheckpoint = vec2(200, 100); // persists across scenes
+        spriteSources.forEach(([name, url]) => loadSprite(name, url));
+        loadSprite("player", "https://i.imgur.com/Wb1qfhK.png");
+        loadSprite("ground", "https://i.imgur.com/M6rwarW.png");
 
-            scene("game", () => {
+        // ==== HELPER FUNCTIONS ====
 
-                loadSprite("player", "sprites/stickman.png");
-                loadSprite("ground", "sprites/grass-block.png");
-                loadSprite("flag", "sprites/checkpoint-flag.png");
-                loadSprite("enemy", "sprites/ghosty.jpg");
+        // make all map rows same length
+        function padMap(map){
+            let longest = 0;
+            for(let row of map) if(row.length > longest) longest = row.length;
+            return map.map(r=>r.padEnd(longest, " "));
+        }
 
-                setGravity(1600);
+        // background color + lab label
+        function addLabBackdrop(levelColor){
+            add([ rect(width(), height()), pos(0,0), color(...levelColor), fixed() ]);
+            add([ text("chem lab", {size: 18}), pos(20,8), fixed() ]);
+        }
 
-                let checkpointPos = savedCheckpoint.clone();
+        // ==== HAZARDS AND ENEMIES ====
 
-                const player = add([
-                    sprite("player"),
-                    area(),
-                    body(),
-                    scale(0.1),
-                    pos(checkpointPos),
-                    health(3),
-                ]);
+        // chaser enemy that zig-zags
+        function makeChaser(x,y,player,speed=160,colorValue=[255,100,100]){
+            const chaser = add([ 
+                sprite("labFlask"), pos(x,y), area(), scale(0.14), color(...colorValue), "danger"
+            ]);
 
-                player.onUpdate(() => {
-                    camPos(camPos().lerp(player.pos, 0.1));
-                });
+            // add zig-zag direction
+            chaser.dirX = 1;
 
-                // LEVEL
-                addLevel([
-                    "                                                                           ",
-                    "                                                                           ",
-                    "        ===             ===               ===             ===              ",
-                    "                                                                           ",
-                    "   ===        ===              ===             ===              ===        ",
-                    "                                                                           ",
-                    "                 F               F               F                    E    ",
-                    "===========================================================================",
-                ], {
-                    tileWidth: 100,
-                    tileHeight: 120,
-                    tiles: {
-                        "=": () => [
-                            sprite("ground"),
-                            area(),
-                            scale(.3),
-                            body({ isStatic: true }),
-                        ],
+            chaser.onUpdate(()=>{
+                let dx = player.pos.x - chaser.pos.x;
+                let dy = player.pos.y - chaser.pos.y;
+                let dist = Math.sqrt(dx*dx + dy*dy);
 
-                        "F": () => [
-                            sprite("flag"),
-                            area(),
-                            scale(.25),
-                            "checkpoint",
-                        ],
-
-                        // END FLAG
-                        "E": () => [
-                            sprite("flag"),
-                            area(),
-                            scale(.3),
-                            "end",
-                        ],
-                    }
-                });
-
-                function jump() {
-                    if (player.isGrounded()) {
-                        player.jump(JUMP_FORCE);
-                    }
+                if(dist < 1200 && dist > 0){
+                    chaser.pos.x += (dx/dist)*speed*dt() + chaser.dirX*60*dt();
+                    chaser.pos.y += (dy/dist)*speed*0.35*dt();
+                    // change zig-zag direction randomly
+                    if(Math.random() < 0.01) chaser.dirX *= -1;
                 }
 
-                onKeyPress("space", jump);
-                onKeyPress("w", jump);
+                // reset if falls off screen
+                if(chaser.pos.y > height()+300) chaser.pos = vec2(x,y);
+            });
 
-                onKeyDown("a", () => player.move(-SPEED, 0));
-                onKeyDown("d", () => player.move(SPEED, 0));
+            return chaser;
+        }
 
-                // SAVE CHECKPOINT
-                player.onCollide("checkpoint", (cp) => {
-                    checkpointPos = cp.pos.clone();
-                    savedCheckpoint = checkpointPos.clone(); // save globally
-                    debug.log("Checkpoint saved!");
-                });
+        // falling flask hazard
+        function makeFallingFlask(x,y,speed=240){
+            const drop = add([ sprite("labBeaker"), pos(x,y), area(), scale(0.14), "danger" ]);
+            drop.onUpdate(()=>{
+                drop.pos.y += speed*dt();
+                if(drop.pos.y > height()+200) destroy(drop);
+            });
+            return drop;
+        }
 
-                // ENEMIES
-                var enemyPositions = [
-                    vec2(700, 500),
-                    vec2(1400, 500),
-                    vec2(2100, 500),
-                    vec2(2800, 500),
-                ];
+        // electric hazard
+        function makeElectricBar(x,y,w,h,topY,bottomY,speed){
+            const bar = add([ rect(w,h), pos(x,y), area(), color(255,220,50), "danger" ]);
+            bar.dir = 1;
+            bar.onUpdate(()=>{
+                bar.pos.y += bar.dir*speed*dt();
+                if(bar.pos.y > bottomY) bar.dir=-1;
+                if(bar.pos.y < topY) bar.dir=1;
+            });
+            return bar;
+        }
 
-                for (let i = 0; i < enemyPositions.length; i++) {
+        // moving platform left-right
+        function makeMovingPlatform(x,y,left,right,speed,w=180,h=22){
+            const plat = add([ rect(w,h), pos(x,y), area(), body({isStatic:true}), color(150,150,220), "platform" ]);
+            plat.dir=1;
+            plat.onUpdate(()=>{
+                plat.pos.x += plat.dir*speed*dt();
+                if(plat.pos.x>right) plat.dir=-1;
+                if(plat.pos.x<left) plat.dir=1;
+            });
+            return plat;
+        }
 
-                    let startX = enemyPositions[i].x;
+        // rising acid hazard
+        function makeRisingAcid(startY){
+            const acid = add([ rect(width()*5, 70), pos(-500,startY), area(), color(70,255,100), "danger" ]);
+            acid.onUpdate(()=>{ acid.pos.y -= 18*dt(); });
+            return acid;
+        }
 
-                    var enemy = add([
-                        sprite("enemy"),
-                        pos(enemyPositions[i]),
-                        area(),
-                        body(),
-                        scale(0.1),
-                        "bad"
-                    ]);
-
-                    enemy.dir = 1;
-
-                    enemy.onUpdate(() => {
-                        enemy.move(enemy.dir * 120, 0);
-
-                        if (enemy.pos.x > startX + 200) enemy.dir = -1;
-                        if (enemy.pos.x < startX - 200) enemy.dir = 1;
-                    });
+        // fake block that breaks when player steps
+        function makeFakeBlock(x,y,w=64,h=22){
+            const fake = add([ rect(w,h), pos(x,y), area(), body({isStatic:true}), color(200,200,150), "fake" ]);
+            fake.tripped=false;
+            fake.onCollide("player",()=>{
+                if(!fake.tripped){
+                    fake.tripped=true;
+                    wait(0.2, ()=>destroy(fake));
                 }
+            });
+            return fake;
+        }
 
-                // DAMAGE
-                player.onCollide("bad", () => {
-                    player.hurt(1);
-                });
+        // trap block that damages player
+        function makeTrapBlock(x,y,w=64,h=22){
+            const trap = add([ rect(w,h), pos(x,y), area(), body({isStatic:true}), color(255,150,50), "trap" ]);
+            trap.tripped=false;
+            return trap;
+        }
 
-                player.on("hurt", () => {
-                    debug.log("Health: " + player.hp());
-                });
+        // player damage
+        function hurtPlayer(player,checkpointPos){
+            if(hurtTimer>0) return false;
+            hurtTimer=0.6;
+            player.hurt(1);
+            if(player.hp()<=0) return true;
+            player.pos = checkpointPos.clone();
+            player.vel = vec2(0,0);
+            return false;
+        }
 
-                // DEATH --> go to lose screen 
-                player.on("death", () => {
-                    go("lose", { checkpoint: checkpointPos });
-                });
+        // ==== TILE DEFINITIONS ====
+        const tiles = {
+            "=":()=>[ rect(TILE,TILE), area(), body({isStatic:true}), color(100,200,250), "solid" ],
+            "^":()=>[ rect(TILE,20), area(), color(255,50,50), "danger" ],
+            "?":()=>[ rect(TILE,20), area(), body({isStatic:true}), color(220,220,100), "fake" ],
+            "!":()=>[ rect(TILE,22), area(), body({isStatic:true}), color(255,120,50), "trap" ],
+            "c":()=>[ sprite("labBeaker"), area(), scale(0.14), "checkpoint" ],
+            "e":()=>[ sprite("volFlask"), area(), scale(0.14), "end" ],
+        };
 
-                // WIN CONDITION
-                player.onCollide("end", () => {
-                    go("win");
-                });
+        // ==== LEVELS ====
+        const levels=[
+            {
+                title:"Unit 1: Intro",
+                bg:[120,200,255],
+                start:vec2(100,100),
+                map:[
+                    "======================",
+                    "=                    =",
+                    "=         c          =",
+                    "=     =======        =",
+                    "=                 e  =",
+                    "======================",
+                ],
+                special(player){ /* nothing extra */ },
+            },
+            {
+                title:"Unit 2: Matter",
+                bg:[255,200,100],
+                start:vec2(100,100),
+                map:[
+                    "=========================",
+                    "=                       =",
+                    "=    ?  ?  ?            =",
+                    "=           c           =",
+                    "=     =======           =",
+                    "=                       =",
+                    "=                  e    =",
+                    "=========================",
+                ],
+                special(player){
+                    // falling flasks continuously
+                    loop(1, ()=>{ makeFallingFlask(rand(100,1100),-50); });
+                },
+            },
+            {
+                title:"Unit 3: Atomic",
+                bg:[200,255,200],
+                start:vec2(120,100),
+                map:[
+                    "======================",
+                    "=         ?          =",
+                    "=   ======    ?      =",
+                    "=    c          e     =",
+                    "======================",
+                ],
+                special(player){
+                    // chaser enemy zig-zag
+                    makeChaser(600,100,player,180,[255,0,0]);
+                },
+            },
+            {
+                title:"Unit 4: Periodic",
+                bg:[255,180,255],
+                start:vec2(100,100),
+                map:[
+                    "=======================",
+                    "=        ?            =",
+                    "=   c         ?       =",
+                    "=       =======       =",
+                    "=                    e=",
+                    "=======================",
+                ],
+                special(player){
+                    makeMovingPlatform(300,300,300,700,120);
+                    makeMovingPlatform(600,450,500,900,150);
+                },
+            },
+            {
+                title:"Unit 5: Bonding",
+                bg:[200,150,255],
+                start:vec2(100,100),
+                map:[
+                    "=========================",
+                    "=          ?            =",
+                    "=  c       ?     ?      =",
+                    "=     ========          =",
+                    "=                 e     =",
+                    "=========================",
+                ],
+                special(player){
+                    makeRisingAcid(650);
+                },
+            },
+            {
+                title:"Unit 6: Thermo",
+                bg:[255,220,180],
+                start:vec2(100,100),
+                map:[
+                    "=========================",
+                    "=   ?     ?             =",
+                    "=        c             =",
+                    "=   =======     ?       =",
+                    "=                     e =",
+                    "=========================",
+                ],
+                special(player){
+                    makeChaser(500,100,player,200,[255,0,100]);
+                    loop(1.5, ()=> makeFallingFlask(rand(100,1100),-50));
+                },
+            },
+            {
+                title:"Unit 7: Kinetics",
+                bg:[180,255,255],
+                start:vec2(100,100),
+                map:[
+                    "========================",
+                    "=       ?       ?      =",
+                    "=  c          ?         =",
+                    "=    ======           =",
+                    "=                   e =",
+                    "========================",
+                ],
+                special(player){
+                    makeElectricBar(400,200,30,150,150,500,100);
+                    makeElectricBar(700,400,30,150,300,600,120);
+                },
+            },
+            {
+                title:"Unit 8: Equilibrium",
+                bg:[255,255,180],
+                start:vec2(100,100),
+                map:[
+                    "===========================",
+                    "=      ?    ?             =",
+                    "=   c        ?            =",
+                    "=       ======            =",
+                    "=                     e   =",
+                    "===========================",
+                ],
+                special(player){
+                    makeChaser(500,100,player,200,[255,0,0]);
+                    makeRisingAcid(650);
+                },
+            },
+            {
+                title:"Unit 9: Acids & Bases",
+                bg:[255,150,255],
+                start:vec2(100,100),
+                map:[
+                    "=============================",
+                    "=   ?      ?     ?          =",
+                    "=        c                   =",
+                    "=   =======       ?          =",
+                    "=                     e      =",
+                    "=============================",
+                ],
+                special(player){
+                    makeChaser(500,100,player,220,[255,0,255]);
+                    makeMovingPlatform(300,350,300,800,180);
+                    makeElectricBar(600,300,30,150,200,600,140);
+                    loop(1, ()=>makeFallingFlask(rand(100,1100),-50));
+                    makeRisingAcid(650);
+                },
+            },
+        ];
 
+        // ==== TITLE SCREEN ====
+        scene("title", ()=>{
+            addLabBackdrop([180,220,255]);
+            add([ text("AP Chem Rush Extreme",{size:54}), pos(center().x,110), anchor("center") ]);
+            add([ text("press space to start",{size:28}), pos(center().x,360), anchor("center") ]);
+            onKeyPress("space",()=>go("level",{i:0}));
+        });
+
+        // ==== LEVEL SCENE ====
+        scene("level", ({i})=>{
+            let level = levels[i];
+            addLabBackdrop(level.bg);
+            setGravity(1600);
+
+            let checkpointPos = level.start.clone();
+            hurtTimer=0;
+
+            addLevel(padMap(level.map), { tileWidth:TILE, tileHeight:TILE, tiles:tiles });
+
+            const player = add([ sprite("player"), pos(checkpointPos.x,checkpointPos.y-10), area(), body(), scale(0.6), health(3) ]);
+
+            // controls
+            onKeyDown("left", ()=>player.move(-SPEED,0));
+            onKeyDown("right", ()=>player.move(SPEED,0));
+            onKeyPress("space", ()=>{ if(player.isGrounded()) player.jump(JUMP_FORCE); });
+
+            // level title
+            add([ text(level.title,{size:24}), pos(20,20), fixed() ]);
+
+            player.onUpdate(()=>{
+                camPos(player.pos);
+                hurtTimer = Math.max(0,hurtTimer-dt());
+                if(player.pos.y>height()+200){ player.pos=checkpointPos.clone(); player.vel=vec2(0,0); }
             });
 
-            // LOSE SCENE
-            scene("lose", ({ checkpoint }) => {
+            // collisions
+            player.onCollide("danger",()=>{ if(hurtPlayer(player,checkpointPos)) go("level",{i:0}); });
+            player.onCollide("checkpoint",(c)=>{ checkpointPos=c.pos.clone(); savedCheckpoint=c.pos.clone(); destroy(c); });
+            player.onCollide("end",()=>{ let next = i+1; if(next>=levels.length) next=0; go("level",{i:next}); });
 
-                add([
-                    text("You Died!\nPress R = Restart\nPress C = Continue", { size: 40 }),
-                    pos(center()),
-                    anchor("center"),
-                ]);
+            // run level special hazards
+            level.special(player);
+        });
 
-                // Restart entire level
-                onKeyPress("r", () => {
-                    savedCheckpoint = vec2(200, 100);
-                    go("game");
-                });
+        go("title");
 
-                // Continue from checkpoint
-                onKeyPress("c", () => {
-                    savedCheckpoint = checkpoint.clone();
-                    go("game");
-                });
-            });
+    </script>
 
-            // WIN SCENE
-            scene("win", () => {
-                add([
-                    text("🎉 You Win!\nYou beat the level!", { size: 50 }),
-                    pos(center()),
-                    anchor("center"),
-                ]);
-
-                onKeyPress("r", () => {
-                    savedCheckpoint = vec2(200, 100);
-                    go("game");
-                });
-            });
-
-            go("game");
-        </script>
-    </body>
+</body>
 </html>

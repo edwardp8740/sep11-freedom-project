@@ -91,6 +91,18 @@ Future ideas:
     * Using level devil as a reference for traps and what the goal is to make using this same test game.
 * I also want to add other small things into the game so that it feels more like a game, for example like if the player falls off the screen, they die.
 
+### 3/23/26
+
+* I'm using my testing folder to see how to make traps and obstacles
+    * I'm aimming to make traps similar to something like stuff you see in level devil
+    * I did it in a way, it's not remotely as good but it does do the stuff I want it to, it's buggy and needs a lot of work
+* I started by making the base of my main game in my testing folder to get a feel of how the game will play out.
+    * The game is buggy and needs work but it is a good starting point for the game.
+    * I need to make the game less buggy, fix certain problems, and find a better way for the game to play itself out
+    * I figured out how to make the game progress from level to level 
+        * I'm thinking about adding a main screen where the player can go back to preivous levels and stuff like that
+    * I'm not sure how I will import the API just yet but I have a rough idea on how I can do it.
+
 <!--
 * Links you used today (websites, videos, etc)
 * Things you tried, progress you made, etc
