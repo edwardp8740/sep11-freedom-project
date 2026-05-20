@@ -54,6 +54,6 @@ Two skills I’ve improved on are consideration and debugging. While working on 
 
 So far I'm on steps 6-7. We're still testing the game for bugs and everything, and then planning beyond our MVP. What we already have planned is to figure out  how to make our game better and more accessable, (make the game playable on github pages), and adding more complicated questions to the API.
 
-[Previous](entry03.md) | [Next](entry05.md)
+[Previous](entry04.md) | [Next](entry06.md)
 
 [Home](../README.md)
