@@ -17,6 +17,15 @@ Two skills I’ve improved on are **Collaboration** and **Communication**. One o
 
 I finished the whole process and don't need to do anything. Thought I do plan on trying to come back to this and improving this to hopefully be a harder and better game as well as function better.
 
+Here are links to my slides and presentation plan:
+
+[Slides](https://docs.google.com/presentation/d/1Qi-an5g72VZsXz2XGID8iWu6ZHlaxh173Of9LBDmqZU/edit?usp=sharing)
+
+[Presentation Plan](../prep/presentation.md)
+
+
+
+
 [Previous](entry05.md) | [Next](entry07.md)
 
 [Home](../README.md)
